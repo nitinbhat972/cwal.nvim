@@ -93,7 +93,7 @@ local function get_highlights(colors)
 		Question = { fg = utils.lighten(colors.color11, 0.5), bold = true },
 		MsgSeparator = { link = "StatusLineNC" },
 
-		StatusLine = { fg = normal_fg, bg = utils.lighten(colors.background, 0.21) },
+		StatusLine = { fg = normal_fg, bg = utils.lighten(colors.background, 0.06) },
 		StatusLineNC = { fg = utils.lighten(normal_fg, 0.1), bg = utils.lighten(colors.background, 0.1) },
 		WinBar = { link = "Normal" },
 		WinBarNC = { link = "NormalNC" },
