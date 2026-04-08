@@ -10,7 +10,7 @@ local watched_file = vim.fn.expand("~/.config/cwal/cwal.ini")
 local debounce_timer = nil
 
 -- Function to reload the colors and apply highlights
-local function reload()
+function M.reload()
 	local loaded_colors, err = colors.load_colors()
 	if not loaded_colors then
 		vim.notify("[cwal] Failed to reload colors: " .. err, vim.log.levels.ERROR)
@@ -28,6 +28,9 @@ local function reload()
 			require("lualine").setup(lualine_config)
 		end
 	end
+
+	-- Trigger custom User event after reload is complete
+	vim.api.nvim_exec_autocmds("User", { pattern = "CwalReload", modeline = false })
 end
 
 -- Starts watching the file for changes
@@ -68,7 +71,7 @@ function M.watch_and_reload()
 				debounce_timer:close()
 				debounce_timer = nil
 			end
-			vim.schedule(reload)
+			vim.schedule(M.reload)
 		end)
 	end)
 end
