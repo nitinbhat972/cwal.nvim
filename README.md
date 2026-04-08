@@ -120,6 +120,22 @@ On change, it:
 1. Reloads palette values from `colors-nvim.lua`
 2. Reapplies all highlight groups
 3. Reloads Lualine (if its theme is set to `"cwal"`)
+4. Triggers the `CwalReload` `User` event
+
+
+## 🔔 Events
+
+You can hook into the reload process using the `CwalReload` `User` event. This is useful for refreshing other plugins or custom highlights that depend on the palette.
+
+```lua
+vim.api.nvim_create_autocmd("User", {
+  pattern = "CwalReload",
+  callback = function()
+    -- Your custom logic here, e.g., refreshing a custom statusline or plugin
+    print("Cwal colors have been reloaded!")
+  end,
+})
+```
 
 
 ## 🛠 Troubleshooting
