@@ -9,9 +9,6 @@ function M.setup()
 	-- Load colors and apply highlights using the central reload function
 	reload.reload()
 
-	-- Set editor options
-	vim.opt.fillchars = { eob = " " }
-
 	-- Start watching for changes
 	reload.watch_and_reload()
 end
