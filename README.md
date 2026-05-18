@@ -38,13 +38,13 @@ alt="cwal.nvim showcase" width="700"/>
 Install from the AUR:
 
 ```bash
-paru -S cwal
+paru -S cwal-git
 ```
 
 or
 
 ```bash
-yay -S cwal
+yay -S cwal-git
 ```
 
 ## 🎨 Color Source
