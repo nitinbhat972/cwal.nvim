@@ -6,7 +6,10 @@ local colors = require("cwal.colors")
 local uv = vim.uv
 
 local watcher = nil
-local watched_file = vim.fn.expand("~/.config/cwal/cwal.ini")
+
+local function get_watched_file()
+	return colors.get_colors_path()
+end
 local debounce_timer = nil
 
 -- Function to reload the colors and apply highlights
@@ -39,7 +42,13 @@ function M.watch_and_reload()
 		return
 	end
 
-	local dir = vim.fn.fnamemodify(watched_file, ":h")
+	local colors_path, path_err = get_watched_file()
+	if not colors_path then
+		vim.notify("[cwal] Error resolving colors file: " .. path_err, vim.log.levels.ERROR)
+		return
+	end
+
+	local dir = vim.fn.fnamemodify(colors_path, ":h")
 	if vim.fn.isdirectory(dir) == 0 then
 		vim.notify("[cwal] Error: Directory for watched file does not exist: " .. dir, vim.log.levels.ERROR)
 		return
@@ -51,7 +60,7 @@ function M.watch_and_reload()
 		return
 	end
 
-	uv.fs_event_start(watcher, watched_file, {}, function(err)
+	uv.fs_event_start(watcher, colors_path, {}, function(err)
 		if err then
 			vim.notify("[cwal] Watcher error: " .. err, vim.log.levels.ERROR)
 			return
