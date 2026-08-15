@@ -112,7 +112,7 @@ require("lualine").setup({
 `cwal.nvim` watches:
 
 ```
-~/.config/cwal/cwal.ini
+<out_dir>/colors-nvim.lua
 ```
 
 On change, it:
