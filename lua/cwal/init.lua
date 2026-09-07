@@ -10,6 +10,7 @@ function M.setup(opts)
 	if opts ~= nil then
 		config.setup(opts)
 	end
+	vim.g.colors_name = "cwal"
 	-- Load colors and apply highlights using the central reload function
 	reload.reload()
 

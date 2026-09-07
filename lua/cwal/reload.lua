@@ -14,6 +14,9 @@ local debounce_timer = nil
 
 -- Function to reload the colors and apply highlights
 function M.reload()
+	if vim.g.colors_name ~= "cwal" then
+		return
+	end
 	local loaded_colors, err = colors.load_colors()
 	if not loaded_colors then
 		vim.notify("[cwal] Failed to reload colors: " .. err, vim.log.levels.ERROR)
