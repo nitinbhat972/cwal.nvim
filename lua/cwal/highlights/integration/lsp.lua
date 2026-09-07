@@ -92,8 +92,39 @@ local function get_highlights(colors)
 	}
 end
 
+local transparent_groups = {
+	DiagnosticSignError = true,
+	DiagnosticSignWarn = true,
+	DiagnosticSignInfo = true,
+	DiagnosticSignHint = true,
+	DiagnosticSignOk = true,
+}
+
+local function resolve_style(opts, key)
+	local val = opts and opts.styles and opts.styles[key]
+	if val == "dark" or val == "normal" or val == "transparent" then
+		return val
+	end
+	if val ~= nil then
+		vim.notify('[cwal] Invalid styles.' .. key .. ' "' .. tostring(val) .. '", falling back to "dark".', vim.log.levels.WARN)
+	end
+	return "dark"
+end
+
 function M.apply(colors, opts)
+	local transparent = opts and opts.transparent == true
+	local floats = resolve_style(opts, "floats")
 	for group, settings in pairs(get_highlights(colors)) do
+		if transparent and transparent_groups[group] then
+			settings.bg = nil
+		end
+		if group == "LspInfoBorder" then
+			if floats == "normal" then
+				settings.bg = colors.background
+			elseif floats == "transparent" then
+				settings.bg = nil
+			end
+		end
 		vim.api.nvim_set_hl(0, group, settings)
 	end
 end

@@ -1,4 +1,5 @@
 local colors_module = require("cwal.colors")
+local config = require("cwal.config")
 local utils = require("cwal.utils")
 
 local function fallback_colors()
@@ -40,7 +41,8 @@ local command_a_fg = utils.readable(colors.background, command_a_bg, 4.9)
 local visual_a_fg = utils.readable(colors.background, visual_a_bg, 4.9)
 local replace_a_fg = utils.readable(colors.background, replace_a_bg, 4.9)
 
-local bar_bg = colors.color0
+local config_opts = config.opts or {}
+local bar_bg = config_opts.transparent and "NONE" or colors.color0
 local normal_b_fg = utils.readable(colors.color12 or colors.color4, bar_bg, 4.9)
 local insert_b_fg = utils.readable(colors.color10 or colors.color2, bar_bg, 4.9)
 local command_b_fg = utils.readable(colors.color11 or colors.color3, bar_bg, 4.9)

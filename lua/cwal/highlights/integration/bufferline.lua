@@ -95,8 +95,27 @@ local function get_highlights(colors)
 	}
 end
 
+local function resolve_style(opts, key)
+	local val = opts and opts.styles and opts.styles[key]
+	if val == "dark" or val == "normal" or val == "transparent" then
+		return val
+	end
+	if val ~= nil then
+		vim.notify('[cwal] Invalid styles.' .. key .. ' "' .. tostring(val) .. '", falling back to "dark".', vim.log.levels.WARN)
+	end
+	return "dark"
+end
+
 function M.apply(colors, opts)
+	local sidebars = resolve_style(opts, "sidebars")
 	for group, settings in pairs(get_highlights(colors)) do
+		if group:sub(1, 10) == "BufferLine" then
+			if sidebars == "normal" then
+				settings.bg = colors.background
+			elseif sidebars == "transparent" then
+				settings.bg = nil
+			end
+		end
 		vim.api.nvim_set_hl(0, group, settings)
 	end
 end

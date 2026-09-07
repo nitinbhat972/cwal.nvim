@@ -189,8 +189,69 @@ local function get_highlights(colors)
 	}
 end
 
+local transparent_groups = {
+	Normal = true,
+	Terminal = true,
+	SignColumn = true,
+	FoldColumn = true,
+	StatusLine = true,
+	StatusLineNC = true,
+	TabLine = true,
+	TabLineFill = true,
+	TabLineSel = true,
+	GitSignsAdd = true,
+	GitSignsChange = true,
+	GitSignsDelete = true,
+}
+
+local sidebar_groups = {
+	NormalSB = true,
+	SignColumnSB = true,
+}
+
+local function is_float_group(group)
+	return group == "NormalFloat"
+		or group == "FloatBorder"
+		or group == "FloatTitle"
+		or group == "FloatFooter"
+		or group:sub(1, 5) == "Pmenu"
+		or group:sub(1, 3) == "Cmp"
+		or group:sub(1, 8) == "BlinkCmp"
+end
+
+local function resolve_style(opts, key)
+	local val = opts and opts.styles and opts.styles[key]
+	if val == "dark" or val == "normal" or val == "transparent" then
+		return val
+	end
+	if val ~= nil then
+		vim.notify('[cwal] Invalid styles.' .. key .. ' "' .. tostring(val) .. '", falling back to "dark".', vim.log.levels.WARN)
+	end
+	return "dark"
+end
+
 function M.apply(colors, opts)
+	local transparent = opts and opts.transparent == true
+	local sidebars = resolve_style(opts, "sidebars")
+	local floats = resolve_style(opts, "floats")
 	for group, settings in pairs(get_highlights(colors)) do
+		if transparent and transparent_groups[group] then
+			settings.bg = nil
+		end
+		if sidebar_groups[group] then
+			if sidebars == "normal" then
+				settings.bg = colors.background
+			elseif sidebars == "transparent" then
+				settings.bg = nil
+			end
+		end
+		if is_float_group(group) then
+			if floats == "normal" then
+				settings.bg = colors.background
+			elseif floats == "transparent" then
+				settings.bg = nil
+			end
+		end
 		vim.api.nvim_set_hl(0, group, settings)
 	end
 end
