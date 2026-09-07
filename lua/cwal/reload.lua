@@ -88,4 +88,17 @@ function M.watch_and_reload()
 	end)
 end
 
+-- Stops watching the file for changes
+function M.stop()
+	if watcher then
+		uv.fs_event_stop(watcher)
+		watcher:close()
+		watcher = nil
+	end
+	if debounce_timer then
+		debounce_timer:close()
+		debounce_timer = nil
+	end
+end
+
 return M
