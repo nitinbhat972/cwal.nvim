@@ -19,7 +19,7 @@ function M.reload()
 		vim.notify("[cwal] Failed to reload colors: " .. err, vim.log.levels.ERROR)
 		return
 	end
-	highlights.apply_highlights(loaded_colors)
+	highlights.apply_highlights(loaded_colors, require("cwal.config").opts)
 
 	-- Reload Lualine theme if it's loaded and using cwal theme
 	if package.loaded.lualine and package.loaded.lualine.get_config then

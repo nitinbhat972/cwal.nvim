@@ -4,10 +4,10 @@ local ui = require("cwal.highlights.ui")
 local syntax = require("cwal.highlights.syntax")
 local integration = require("cwal.highlights.integration")
 
-function M.apply_highlights(colors)
-	ui.apply(colors)
-	syntax.apply(colors)
-	integration.apply(colors)
+function M.apply_highlights(colors, opts)
+	ui.apply(colors, opts)
+	syntax.apply(colors, opts)
+	integration.apply(colors, opts)
 end
 
 return M

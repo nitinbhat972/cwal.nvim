@@ -189,7 +189,7 @@ local function get_highlights(colors)
 	}
 end
 
-function M.apply(colors)
+function M.apply(colors, opts)
 	for group, settings in pairs(get_highlights(colors)) do
 		vim.api.nvim_set_hl(0, group, settings)
 	end
