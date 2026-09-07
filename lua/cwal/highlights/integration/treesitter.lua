@@ -1,8 +1,24 @@
 local M = {}
 local utils = require("cwal.utils")
 
-local function get_highlights(colors)
+local style_attrs = { "bold", "italic", "underline", "undercurl", "strikethrough" }
+
+local function apply_style(hl, style)
+	for _, attr in ipairs(style_attrs) do
+		hl[attr] = nil
+	end
+	for k, v in pairs(style) do
+		hl[k] = v
+	end
+	return hl
+end
+
+local function get_highlights(colors, opts)
 	local bg = colors.background
+	local comments_style = (opts and opts.styles and opts.styles.comments) or {}
+	local keywords_style = (opts and opts.styles and opts.styles.keywords) or {}
+	local functions_style = (opts and opts.styles and opts.styles.functions) or {}
+	local variables_style = (opts and opts.styles and opts.styles.variables) or {}
 
 	local text_fg = utils.readable(colors.foreground, bg, 4.9)
 	local comment_fg = utils.readable(utils.lighten(colors.color8, 0.2), bg, 4.9)
@@ -18,7 +34,7 @@ local function get_highlights(colors)
 	local quote_fg = utils.readable(colors.color7, bg, 4.9)
 
 	return {
-		["@comment"] = { fg = comment_fg, italic = true },
+		["@comment"] = apply_style({ fg = comment_fg }, comments_style),
 		["@comment.documentation"] = { link = "@comment" },
 		["@todo"] = { fg = yellow_fg, bold = true },
 		["@note"] = { fg = blue_fg, bold = true },
@@ -33,34 +49,34 @@ local function get_highlights(colors)
 		["@module.builtin"] = { fg = blue_fg, italic = true },
 		["@label"] = { fg = blue_fg },
 
-		["@variable"] = { fg = text_fg },
-		["@variable.builtin"] = { fg = cyan_fg, italic = true },
-		["@variable.parameter"] = { fg = quote_fg },
-		["@variable.member"] = { fg = cyan_fg },
+		["@variable"] = apply_style({ fg = text_fg }, variables_style),
+		["@variable.builtin"] = apply_style({ fg = cyan_fg }, variables_style),
+		["@variable.parameter"] = apply_style({ fg = quote_fg }, variables_style),
+		["@variable.member"] = apply_style({ fg = cyan_fg }, variables_style),
 		["@field"] = { link = "@variable.member" },
 		["@property"] = { link = "@variable.member" },
 
-		["@function"] = { fg = blue_fg, italic = true },
-		["@function.builtin"] = { fg = blue_fg, bold = true },
+		["@function"] = apply_style({ fg = blue_fg }, functions_style),
+		["@function.builtin"] = apply_style({ fg = blue_fg }, functions_style),
 		["@function.call"] = { link = "@function" },
-		["@function.macro"] = { fg = blue_fg, underline = true },
+		["@function.macro"] = apply_style({ fg = blue_fg }, functions_style),
 		["@function.method"] = { link = "@function" },
 		["@function.method.call"] = { link = "@function" },
 		["@method"] = { link = "@function" },
 		["@method.call"] = { link = "@function" },
 		["@constructor"] = { fg = blue_fg, bold = true },
 
-		["@keyword"] = { fg = orange_fg, italic = true },
-		["@keyword.function"] = { fg = orange_fg, bold = true },
-		["@keyword.operator"] = { fg = orange_fg },
-		["@keyword.return"] = { fg = orange_fg },
-		["@keyword.import"] = { fg = orange_fg },
-		["@keyword.conditional"] = { fg = orange_fg, bold = true },
-		["@keyword.repeat"] = { fg = orange_fg, bold = true },
-		["@keyword.exception"] = { fg = red_fg, italic = true },
-		["@keyword.type"] = { fg = orange_fg },
-		["@keyword.modifier"] = { fg = blue_fg },
-		["@keyword.debug"] = { fg = yellow_fg },
+		["@keyword"] = apply_style({ fg = orange_fg }, keywords_style),
+		["@keyword.function"] = apply_style({ fg = orange_fg }, keywords_style),
+		["@keyword.operator"] = apply_style({ fg = orange_fg }, keywords_style),
+		["@keyword.return"] = apply_style({ fg = orange_fg }, keywords_style),
+		["@keyword.import"] = apply_style({ fg = orange_fg }, keywords_style),
+		["@keyword.conditional"] = apply_style({ fg = orange_fg }, keywords_style),
+		["@keyword.repeat"] = apply_style({ fg = orange_fg }, keywords_style),
+		["@keyword.exception"] = apply_style({ fg = red_fg }, keywords_style),
+		["@keyword.type"] = apply_style({ fg = orange_fg }, keywords_style),
+		["@keyword.modifier"] = apply_style({ fg = blue_fg }, keywords_style),
+		["@keyword.debug"] = apply_style({ fg = yellow_fg }, keywords_style),
 		["@conditional"] = { link = "@keyword.conditional" },
 		["@repeat"] = { link = "@keyword.repeat" },
 		["@operator"] = { fg = cyan_fg },
@@ -145,7 +161,7 @@ local function get_highlights(colors)
 		["@lsp.typemod.property.readonly"] = { fg = yellow_fg },
 		["@lsp.typemod.function.defaultLibrary"] = { fg = blue_fg, bold = true },
 
-		["@variable.javascript"] = { fg = cyan_fg },
+		["@variable.javascript"] = apply_style({ fg = cyan_fg }, variables_style),
 		["@property.json"] = { fg = blue_fg },
 		["@type.python"] = { fg = magenta_fg },
 
@@ -159,7 +175,7 @@ local function get_highlights(colors)
 end
 
 function M.apply(colors, opts)
-	for group, settings in pairs(get_highlights(colors)) do
+	for group, settings in pairs(get_highlights(colors, opts)) do
 		vim.api.nvim_set_hl(0, group, settings)
 	end
 end
