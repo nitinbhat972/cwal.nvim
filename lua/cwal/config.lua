@@ -22,6 +22,7 @@ function M.setup(opts)
 		opts = {}
 	end
 	M.opts = vim.tbl_deep_extend("force", vim.deepcopy(M.defaults), opts)
+	local raw_styles = type(opts.styles) == "table" and opts.styles or {}
 
 	M.opts.transparent = M.opts.transparent == true
 
@@ -38,7 +39,9 @@ function M.setup(opts)
 		end
 	end
 	for _, key in ipairs({ "comments", "keywords", "functions", "variables" }) do
-		if M.opts.styles[key] == nil then
+		if type(raw_styles[key]) == "table" then
+			M.opts.styles[key] = vim.deepcopy(raw_styles[key])
+		elseif M.opts.styles[key] == nil then
 			M.opts.styles[key] = {}
 		elseif type(M.opts.styles[key]) ~= "table" then
 			M.opts.styles[key] = {}
