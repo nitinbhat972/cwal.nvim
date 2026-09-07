@@ -248,7 +248,7 @@ function M.apply(colors, opts)
 		if is_float_group(group) then
 			if floats == "normal" then
 				settings.bg = colors.background
-			elseif floats == "transparent" then
+			elseif floats == "transparent" and group ~= "PmenuSel" then
 				settings.bg = nil
 			end
 		end
