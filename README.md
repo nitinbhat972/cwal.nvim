@@ -64,6 +64,7 @@ yay -S cwal-git
   "nitinbhat972/cwal.nvim",
   priority = 1000,
   config = function()
+    require("cwal").setup() -- defaults listed under Configuration below
     vim.cmd.colorscheme("cwal")
   end,
 }
@@ -146,10 +147,40 @@ vim.api.nvim_create_autocmd("User", {
 - Confirm `<out_dir>/colors-nvim.lua` exists
 
 
-## 📝 Notes
+## ⚙️ Configuration
 
-- No user options are required at the moment.
-- The plugin is intentionally palette-driven — regenerate your `cwal` colors and Neovim follows.
+```lua
+require("cwal").setup({
+  transparent = false,
+  styles = {
+    comments = { italic = true },
+    keywords = { italic = true },
+    functions = {},
+    variables = {},
+    sidebars = "dark",
+    floats = "dark",
+  },
+  overrides = {},
+})
+```
+
+Terminal colors are always applied from the palette. There is no flag for them.
+
+Precedence order: palette, styles, transparent, sidebars/floats, terminal, overrides.
+
+`:colorscheme cwal` preserves previously-set opts. Calling `setup()` with no arguments re-applies the stored opts.
+
+Reload persistence: the watcher keeps your opts. When `colors-nvim.lua` changes, the palette reloads and the stored opts are re-applied.
+
+### sidebars / floats
+
+| Value | Background |
+| --- | --- |
+| `dark` | current palette bgs |
+| `normal` | Normal background |
+| `transparent` | none |
+
+`normal` intentionally differs from today's distinct sidebar/float bgs (tokyonight parity).
 
 
 ## 📄 License
