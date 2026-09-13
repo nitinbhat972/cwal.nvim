@@ -11,8 +11,7 @@ local function get_highlights(colors)
 	local ok_fg = utils.readable(colors.color10 or colors.color2, main_bg, 4.9)
 
 	local reference_bg = utils.ensure_contrast(utils.lighten(main_bg, 0.12), main_bg, 1.35)
-	local inlay_bg = utils.ensure_contrast(utils.lighten(main_bg, 0.08), main_bg, 1.2)
-	local inlay_fg = utils.ensure_contrast(colors.color8, inlay_bg, 4.9)
+	local inlay_fg = utils.lighten(colors.color8, 0.3)
 
 	local signature_bg = utils.ensure_contrast(utils.lighten(main_bg, 0.22), main_bg, 1.55)
 	local signature_fg = utils.ensure_contrast(colors.color10 or colors.color2, signature_bg, 4.9)
@@ -58,7 +57,7 @@ local function get_highlights(colors)
 		LspReferenceRead = { link = "LspReferenceText" },
 		LspReferenceWrite = { link = "LspReferenceText" },
 
-		LspInlayHint = { fg = inlay_fg, bg = inlay_bg, italic = true },
+		LspInlayHint = { fg = inlay_fg, italic = true },
 		LspCodeLens = { fg = code_lens_fg, italic = true },
 		LspCodeLensSeparator = { fg = code_lens_sep_fg },
 
