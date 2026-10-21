@@ -47,7 +47,7 @@ function M.get_colors_path()
 	end
 
 	local clean_out_dir = out_dir:gsub("/+$", "")
-	return clean_out_dir .. "/colors-nvim.lua"
+	return clean_out_dir .. "/colors.lua"
 end
 
 function M.load_colors()
